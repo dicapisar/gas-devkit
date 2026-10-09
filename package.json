@@ -1,0 +1,27 @@
+{
+  "name": "gas-devkit",
+  "version": "0.1.0",
+  "description": "Professional CLI for local Google Apps Script development with TypeScript and gas-fakes.",
+  "type": "module",
+  "bin": { "gas-devkit": "dist/cli.js" },
+  "files": ["dist"],
+  "engines": { "node": ">=18" },
+  "scripts": { "build": "tsup", "test": "vitest run", "dev": "tsup --watch" },
+  "dependencies": {
+    "@inquirer/prompts": "^7.3.2",
+    "clipboardy": "^4.0.0",
+    "commander": "^13.1.0",
+    "esbuild": "^0.25.0",
+    "execa": "^9.5.2",
+    "fs-extra": "^11.3.0",
+    "ora": "^8.2.0",
+    "picocolors": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^22.13.4",
+    "tsup": "^8.3.6",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.7"
+  }
+}
