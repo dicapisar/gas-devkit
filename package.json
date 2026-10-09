@@ -1,6 +1,6 @@
 {
   "name": "gas-devkit",
-  "version": "0.1.5",
+  "version": "0.1.8",
   "description": "Professional CLI for local Google Apps Script development with TypeScript and gas-fakes.",
   "keywords": [
     "google-apps-script",

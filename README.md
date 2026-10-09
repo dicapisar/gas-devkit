@@ -29,6 +29,7 @@ npm test
 - `gas-devkit add service`: adds advanced services idempotently.
 - `gas-devkit auth export-secret`: copies `.clasprc.json` to the clipboard without storing it in the project.
 - `gas-devkit ci init`: creates the GitHub Actions workflow.
+- `gas-devkit link <scriptId>`: links the local project to an Apps Script project.
 - `gas-devkit list`: displays scripts available through clasp.
 - `gas-devkit dev`: runs build/watch, clasp push watch, and logs watch.
 
@@ -56,3 +57,23 @@ If port `9229` is already in use, choose another port, for example:
 ```bash
 gas-devkit run helloWorld --inspect-brk 9230
 ```
+
+## Linking to Google Workspace
+
+The Apps Script link is stored in `.clasp.json` and committed to the repository.
+Local development never pushes code to Google. GitHub Actions performs the push
+and deployment only after a successful push to `main`.
+
+```bash
+npx @google/clasp login
+gas-devkit link YOUR_SCRIPT_ID
+git add .clasp.json
+git commit -m "Link Apps Script project"
+git push
+```
+
+The script ID is available in the Apps Script editor under **Project Settings**.
+The build copies `appsscript.json` into `dist/`, which is the directory used by
+`.clasp.json` in GitHub Actions. Pull Requests run tests and build only. A push
+to `main` runs those checks first, then restores `CLASPRC_JSON`, pushes the build,
+and creates the Apps Script deployment.

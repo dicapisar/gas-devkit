@@ -58,6 +58,17 @@ export async function exportSecretCommand(): Promise<void> {
 
 export async function ciCommand(): Promise<void> { assertProject(); await writeCi(process.cwd()); console.log(pc.green('Created .github/workflows/deploy.yml')); }
 
+export async function linkCommand(scriptId: string): Promise<void> {
+  assertProject();
+  if (!/^[A-Za-z0-9_-]+$/.test(scriptId)) throw new Error('The Apps Script ID is not valid.');
+  const claspPath = path.resolve('.clasp.json');
+  const clasp = (await fs.pathExists(claspPath)) ? await fs.readJson(claspPath) : { rootDir: 'dist' };
+  clasp.scriptId = scriptId;
+  clasp.rootDir ??= 'dist';
+  await fs.writeJson(claspPath, clasp, { spaces: 2 });
+  console.log(pc.green(`Linked local project to Apps Script ${scriptId}.`));
+}
+
 export async function listCommand(): Promise<void> { await runClasp(['list']); }
 
 export async function devCommand(): Promise<void> {

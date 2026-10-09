@@ -3,11 +3,11 @@ import inspector from 'node:inspector';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { execa } from 'execa';
-import { addServiceCommand, ciCommand, devCommand, exportSecretCommand, initCommand, listCommand, testCommand } from './commands.js';
+import { addServiceCommand, ciCommand, devCommand, exportSecretCommand, initCommand, linkCommand, listCommand, testCommand } from './commands.js';
 import { serveCommand } from './serve.js';
 
 const program = new Command();
-program.name('gas-devkit').description('CLI toolkit for Google Apps Script').version('0.1.3');
+program.name('gas-devkit').description('CLI toolkit for Google Apps Script').version('0.1.6');
 program.command('init [directory]').action(initCommand);
 program.command('test').option('--watch').option('--coverage').action(options => testCommand(options.watch, options.coverage));
 program.command('serve').option('-p, --port <number>', 'Puerto HTTP', '3000').option('--document-id <id>').action(options => serveCommand(Number(options.port)));
@@ -37,6 +37,7 @@ program.command('run <function> [args...]')
 program.command('add').command('service').action(addServiceCommand);
 program.command('auth').command('export-secret').action(exportSecretCommand);
 program.command('ci').command('init').action(ciCommand);
+program.command('link <scriptId>').description('Link the local project to an Apps Script project').action(linkCommand);
 program.command('list').action(listCommand);
 program.command('dev').action(devCommand);
 program.parseAsync().catch(error => { console.error(`Error: ${error instanceof Error ? error.message : String(error)}`); process.exitCode = 1; });
