@@ -14,7 +14,7 @@ export interface InitOptions {
 }
 
 const validName = /^[a-zA-Z][a-zA-Z0-9_-]*$/;
-export const validateAppName = (name: string) => validName.test(name) || 'Usa letras, numeros, guiones o guiones bajos.';
+export const validateAppName = (name: string) => validName.test(name) || 'Use letters, numbers, hyphens, or underscores.';
 
 export async function generateProject(options: InitOptions): Promise<void> {
   if (!validateAppName(options.appName)) throw new Error('The application name is not a safe identifier.');
@@ -28,11 +28,11 @@ export async function generateProject(options: InitOptions): Promise<void> {
   await fs.ensureDir(path.join(root, '.vscode'));
 
   const packageJson = {
-    name: options.appName.toLowerCase(), version: '0.1.0', private: true,
-    scripts: { build: 'node esbuild.config.js', test: 'jest', 'test:watch': 'jest --watch', 'test:coverage': 'jest --coverage' },
+    name: options.appName.toLowerCase(), version: '0.1.0', private: true, type: 'module',
+    scripts: { build: 'node esbuild.config.js', test: 'jest --config jest.config.cjs', 'test:watch': 'jest --config jest.config.cjs --watch', 'test:coverage': 'jest --config jest.config.cjs --coverage' },
     devDependencies: {
-      '@types/google-apps-script': '^1.0.83', '@types/node': '^22.13.4',
-      '@mcpher/gas-fakes': '^1.1.0', esbuild: '^0.25.0', jest: '^29.7.0', 'ts-jest': '^29.2.5', typescript: '^5.7.3',
+      '@types/google-apps-script': '^1.0.83', '@types/jest': '^30.0.0', '@types/node': '^22.13.4',
+      '@mcpher/gas-fakes': '^1.1.0', esbuild: '^0.25.0', jest: '^30.5.2', 'ts-jest': '^29.4.5', typescript: '^5.7.3',
     },
   };
   if (!options.emulation) {
@@ -45,16 +45,16 @@ export async function generateProject(options: InitOptions): Promise<void> {
   }, { spaces: 2 });
   await fs.writeJson(path.join(root, '.clasp.json'), { scriptId: 'REPLACE_WITH_SCRIPT_ID', rootDir: 'dist' }, { spaces: 2 });
   await fs.writeJson(path.join(root, 'tsconfig.json'), {
-    compilerOptions: { target: 'ES2022', module: 'ESNext', moduleResolution: 'Bundler', strict: true, types: ['node', 'google-apps-script'], noEmit: true }, include: ['src', 'tests'],
+    compilerOptions: { target: 'ES2022', module: 'ESNext', moduleResolution: 'Bundler', lib: ['ES2022'], strict: true, esModuleInterop: true, types: ['node', 'jest', 'google-apps-script'], noEmit: true }, include: ['src', 'tests'],
   }, { spaces: 2 });
-  await fs.writeJson(path.join(root, 'jest.config.ts'), { preset: 'ts-jest', testEnvironment: 'node', setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'] }, { spaces: 2 });
+  await fs.writeFile(path.join(root, 'jest.config.cjs'), `module.exports = {\n  preset: 'ts-jest',\n  testEnvironment: 'node',\n  setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],\n};\n`, 'utf8');
   await fs.writeFile(path.join(root, 'esbuild.config.js'), `import { build } from 'esbuild';\nawait build({ entryPoints: ['src/index.ts'], bundle: true, format: 'iife', outfile: 'dist/bundle.js', platform: 'neutral', target: 'es2020' });\n`, 'utf8');
   await fs.writeFile(path.join(root, '.gitignore'), 'node_modules/\ndist/\ncoverage/\n.env\n.clasprc.json\n.DS_Store\n', 'utf8');
   await fs.writeJson(path.join(root, '.vscode', 'extensions.json'), { recommendations: ['googlecloudtools.cloudcode', 'ms-vscode.vscode-typescript-next'] }, { spaces: 2 });
   await fs.writeJson(path.join(root, '.vscode', 'settings.json'), { 'typescript.tsdk': 'node_modules/typescript/lib' }, { spaces: 2 });
   await fs.writeFile(path.join(source, 'models', 'record.model.ts'), `export interface RecordModel { id: string; createdAt: string; data: Record<string, unknown>; }\n`, 'utf8');
   await fs.writeFile(path.join(source, 'services', 'base.service.ts'), `export abstract class BaseService<T> {\n  abstract execute(input: T): Promise<unknown>;\n}\n`, 'utf8');
-  await fs.writeFile(path.join(source, 'services', 'sheets.service.ts'), `import { BaseService } from './base.service';\nexport class SheetsService extends BaseService<string> {\n  async execute(range: string): Promise<unknown> { return Sheets.Spreadsheets.Values.get('', range); }\n}\n`, 'utf8');
+  await fs.writeFile(path.join(source, 'services', 'sheets.service.ts'), `import { BaseService } from './base.service';\nexport class SheetsService extends BaseService<string> {\n  async execute(range: string): Promise<unknown> { return Sheets.Spreadsheets?.Values?.get('', range); }\n}\n`, 'utf8');
   const entry = options.projectType === 'webapp'
     ? `export function doGet(): GoogleAppsScript.Content.TextOutput { return ContentService.createTextOutput('gas-devkit webapp'); }\nexport function doPost(): GoogleAppsScript.Content.TextOutput { return ContentService.createTextOutput('ok'); }\n`
     : `export function main(): string { return 'gas-devkit'; }\n`;
