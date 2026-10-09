@@ -13,7 +13,8 @@ import type { ProjectType } from './types.js';
 
 export async function initCommand(directory = '.'): Promise<void> {
   const appName = await input({ message: 'Application name:', default: path.basename(path.resolve(directory)) });
-  const projectType = await select<ProjectType>({ message: 'Project type:', choices: ['standalone', 'webapp', 'sheets', 'docs', 'forms'].map(value => ({ name: value, value: value as ProjectType })) });
+  const projectTypes: ProjectType[] = ['standalone', 'webapp', 'api-executable', 'addon', 'library', 'chat-app', 'sheets', 'docs', 'forms'];
+  const projectType = await select<ProjectType>({ message: 'Project type:', choices: projectTypes.map(value => ({ name: value, value })) });
   const emulation = await confirm({ message: 'Enable gas-fakes?', default: true });
   const packageManager = await select<'npm' | 'pnpm' | 'yarn'>({ message: 'Package manager:', choices: ['npm', 'pnpm', 'yarn'].map(value => ({ name: value, value: value as 'npm' | 'pnpm' | 'yarn' })) });
   const git = await confirm({ message: 'Initialize Git?', default: true });

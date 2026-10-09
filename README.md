@@ -30,3 +30,13 @@ npm test
 - `gas-devkit ci init`: creates the GitHub Actions workflow.
 - `gas-devkit list`: displays scripts available through clasp.
 - `gas-devkit dev`: runs build/watch, clasp push watch, and logs watch.
+
+The `init` command offers focused starter templates for `standalone`, `webapp`,
+`api-executable`, `addon`, `library`, `chat-app`, `sheets`, `docs`, and `forms`.
+Each template starts with only the relevant Hello World entry points:
+
+- Web App: `doGet` and `doPost`
+- API executable, standalone script, and library: `helloWorld`
+- Add-on: `onOpen` and `onInstall`
+- Chat app: `onMessage` and `onAppCommand`
+- Sheets, Docs, and Forms: `onOpen` and `helloWorld`

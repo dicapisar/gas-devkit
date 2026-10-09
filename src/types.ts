@@ -1,1 +1,10 @@
-export type ProjectType = 'standalone' | 'webapp' | 'sheets' | 'docs' | 'forms';
+export type ProjectType =
+	| 'standalone'
+	| 'webapp'
+	| 'api-executable'
+	| 'addon'
+	| 'library'
+	| 'chat-app'
+	| 'sheets'
+	| 'docs'
+	| 'forms';
