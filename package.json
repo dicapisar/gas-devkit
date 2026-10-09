@@ -2,11 +2,22 @@
   "name": "gas-devkit",
   "version": "0.1.0",
   "description": "Professional CLI for local Google Apps Script development with TypeScript and gas-fakes.",
+  "keywords": ["google-apps-script", "gas", "clasp", "typescript", "cli", "developer-tools"],
+  "author": "dicapisar",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dicapisar/gas-devkit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dicapisar/gas-devkit/issues"
+  },
+  "homepage": "https://github.com/dicapisar/gas-devkit#readme",
   "type": "module",
   "bin": { "gas-devkit": "dist/cli.js" },
-  "files": ["dist"],
+  "files": ["dist", "README.md", "LICENSE"],
   "engines": { "node": ">=18" },
-  "scripts": { "build": "tsup", "test": "vitest run", "dev": "tsup --watch" },
+  "scripts": { "build": "tsup", "test": "vitest run", "dev": "tsup --watch", "prepublishOnly": "npm run build && npm test" },
   "dependencies": {
     "@inquirer/prompts": "^7.3.2",
     "clipboardy": "^4.0.0",

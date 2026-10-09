@@ -2,6 +2,14 @@
 
 TypeScript CLI for Google Apps Script projects with esbuild bundling, local testing, and clasp automation.
 
+## Installation
+
+```bash
+npm install --global gas-devkit
+# or run without installing globally
+npx gas-devkit --help
+```
+
 ## Development
 
 ```bash
@@ -11,7 +19,7 @@ node dist/cli.js --help
 npm test
 ```
 
-## Comands
+## Commands
 
 - `gas-devkit init [directory]`: generates a TypeScript-ready GAS project.
 - `gas-devkit test [--watch] [--coverage]`: runs the project test suite.
