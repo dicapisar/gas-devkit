@@ -25,6 +25,7 @@ npm test
 - `gas-devkit test [--watch] [--coverage]`: runs the project test suite.
 - `gas-devkit serve [--port 3000]`: serves `doGet` and `doPost` locally.
 - `gas-devkit run <function> [arguments...]`: invokes an exported function.
+- `gas-devkit run <function> [arguments...] --inspect-brk`: pauses execution for VS Code debugging.
 - `gas-devkit add service`: adds advanced services idempotently.
 - `gas-devkit auth export-secret`: copies `.clasprc.json` to the clipboard without storing it in the project.
 - `gas-devkit ci init`: creates the GitHub Actions workflow.
@@ -40,3 +41,8 @@ Each template starts with only the relevant Hello World entry points:
 - Add-on: `onOpen` and `onInstall`
 - Chat app: `onMessage` and `onAppCommand`
 - Sheets, Docs, and Forms: `onOpen` and `helloWorld`
+
+For local line-by-line debugging, run `gas-devkit run helloWorld --inspect-brk`,
+then attach to port `9229` using VS Code's Node.js debugger. The command builds
+the local ESM entry point before invoking the function, while keeping the GAS
+bundle in `dist/bundle.js`.
