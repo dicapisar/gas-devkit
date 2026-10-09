@@ -46,3 +46,13 @@ For local line-by-line debugging, run `gas-devkit run helloWorld --inspect-brk`,
 then attach to port `9229` using VS Code's Node.js debugger. The command builds
 the local ESM entry point before invoking the function, while keeping the GAS
 bundle in `dist/bundle.js`.
+
+The generated esbuild configuration emits source maps, so breakpoints, stepping,
+variables, and stack traces resolve back to the original TypeScript files under
+`src/` instead of showing only bundled JavaScript.
+
+If port `9229` is already in use, choose another port, for example:
+
+```bash
+gas-devkit run helloWorld --inspect-brk 9230
+```

@@ -7,7 +7,7 @@ import { addServiceCommand, ciCommand, devCommand, exportSecretCommand, initComm
 import { serveCommand } from './serve.js';
 
 const program = new Command();
-program.name('gas-devkit').description('CLI toolkit for Google Apps Script').version('0.1.2');
+program.name('gas-devkit').description('CLI toolkit for Google Apps Script').version('0.1.3');
 program.command('init [directory]').action(initCommand);
 program.command('test').option('--watch').option('--coverage').action(options => testCommand(options.watch, options.coverage));
 program.command('serve').option('-p, --port <number>', 'Puerto HTTP', '3000').option('--document-id <id>').action(options => serveCommand(Number(options.port)));
@@ -17,7 +17,13 @@ program.command('run <function> [args...]')
 	.action(async (functionName, args, options) => {
 		await execa('npm', ['run', 'build'], { stdio: 'inherit' });
 		const debugPort = options.inspectBrk ?? options.inspect;
-		if (debugPort) inspector.open(Number(debugPort === true ? 9229 : debugPort), '127.0.0.1', Boolean(options.inspectBrk));
+		if (debugPort) {
+			const port = Number(debugPort === true ? 9229 : debugPort);
+			inspector.open(port, '127.0.0.1', Boolean(options.inspectBrk));
+			if (!inspector.url()) {
+				throw new Error(`Could not start the Node.js inspector on port ${port}. The port may already be in use. Try --inspect-brk 9230 or stop the process using port ${port}.`);
+			}
+		}
 		try {
 			const moduleUrl = pathToFileURL(path.resolve('dist/index.js')).href;
 			const mod = await import(`${moduleUrl}?run=${Date.now()}`);
